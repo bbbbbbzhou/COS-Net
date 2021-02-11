@@ -1,23 +1,24 @@
-# DuDoRNet: Learning a Dual-Domain Recurrent Network for Fast MRI Reconstruction with Deep T1 Prior
+# One-Shot Learning With Attention-Guided Segmentation in Cryo-Electron Tomography
 
-Bo Zhou, S. Kevin Zhou
+Bo Zhou, Haisu Yu, Xiangrui Zeng, Xiaoyan Yang, Jing Zhang, and Min Xu
 
-IEEE Conference on Computer Vision and Pattern Recognition (CVPR), 2020
+Frontiers in Molecular Biosciences (AI in Biological and Biomedical Imaging), 2020
 
-[[Paper](http://openaccess.thecvf.com/content_CVPR_2020/papers/Zhou_DuDoRNet_Learning_a_Dual-Domain_Recurrent_Network_for_Fast_MRI_Reconstruction_CVPR_2020_paper.pdf)]
+[[Paper](https://www.frontiersin.org/articles/10.3389/fmolb.2020.613347/full)]
 
-This repository contains the PyTorch implementation of DuDoRNet.
+This repository contains the PyTorch implementation of COS-Net.
 
 ### Citation
 If you use this code for your research or project, please cite:
 
-	@inproceedings{zhou2020dudornet,
-	  title={DuDoRNet: Learning a Dual-Domain Recurrent Network for Fast MRI Reconstruction with Deep T1 Prior},
-	  author={Zhou, Bo and Zhou, S Kevin},
-	  booktitle={Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition},
-	  pages={4273--4282},
-	  year={2020}
-	}
+    @article{zhou2020one,
+      title={One-Shot Learning With Attention-Guided Segmentation in Cryo-Electron Tomography},
+      author={Zhou, Bo and Yu, Haisu and Zeng, Xiangrui and Yang, Xiaoyan and Zhang, Jing and Xu, Min},
+      journal={Frontiers in Molecular Biosciences},
+      volume={7},
+      year={2020},
+      publisher={Frontiers Media SA}
+    }
 
 
 ### Environment and Dependencies
