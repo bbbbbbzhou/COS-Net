@@ -28,97 +28,71 @@ Requirements:
 * scipy
 * scikit-image
 * opencv-python
-* tqdm
+* denseCRF3D
 
 Our code has been tested with Python 3.7, Pytorch 0.4.1, CUDA 10.0 on Ubuntu 18.04.
 
 
 ### Dataset Setup
-    .
-    Data
-    ├── TRAIN                   # contain training files
-    │   ├── T1
-    │   │   ├── kspace
-    │   │   │   ├── train_1.mat         
-    │   │   │   ├── train_2.mat 
-    │   │   │   ├── ...         
-    │   │   │   └── train_N.mat 
-    │   │   └── ...
-    │   │   
-    │   ├── T2
-    │   │   ├── kspace
-    │   │   │   ├── train_1.mat          
-    │   │   │   ├── train_2.mat 
-    │   │   │   ├── ...         
-    │   │   │   └── train_N.mat 
-    │   │   └── ...
-    │   │   
-    │   ├── FLAIR
-    │   │   ├── kspace
-    │   │   │   ├── train_1.mat          
-    │   │   │   ├── train_2.mat 
-    │   │   │   ├── ...         
-    │   │   │   └── train_N.mat 
-    │   │   └── ...
-    │   └── ...
+    ../
+    Data/
+    ├── subtomograms_snrINF              
+    │   ├── cnt.npy              # 22x1 array -- contains the number of subtomograms for each classes (22 classes in total)
+    │   ├── data.npy             # 22x1000x32x32x32 array -- contains 22 classes' subtomograms with size of 32x32x32. 1000 subtomogram storage place give, and is indexed by cnt.npy
+    │   ├── data_seg.npy         # 22x1000x32x32x32 array -- contains 22 classes' subtomogram segmentation with size of 32x32x32, corresponding with data.npy
+    │   ├── testtom_vol_00.npy   # 1xcountsx32x32x32 array -- contains 1st class's subtomograms with size of 32x32x32, counts means number of subtomogram in this class.
+    │   ├── testtom_seg_00.npy   # 1xcountsx32x32x32 array -- contains 1st class's subtomogram segmentation with size of 32x32x32, counts means number of subtomogram in this class.
+    │   ├── testtom_vol_01.npy  
+    │   ├── testtom_seg_01.npy 
+    │   ├── testtom_vol_02.npy  
+    │   ├── testtom_seg_02.npy  
+    │   ├── testtom_vol_03.npy  
+    │   ├── testtom_seg_03.npy  
+    │   ├── testtom_vol_04.npy  
+    │   ├── testtom_seg_04.npy 
+    │   ├── testtom_vol_05.npy  
+    │   ├── testtom_seg_05.npy  
+    │   ├── testtom_vol_06.npy  
+    │   ├── testtom_seg_06.npy 
+    │   ├── testtom_vol_07.npy  
+    │   ├── testtom_seg_07.npy  
+    │   ├── testtom_vol_08.npy  
+    │   ├── testtom_seg_08.npy  
+    │   ├── testtom_vol_09.npy  
+    │   ├── testtom_seg_09.npy 
+    │   ├── testtom_vol_10.npy  
+    │   ├── testtom_seg_10.npy 
+    │   ├── testtom_vol_11.npy  
+    │   ├── testtom_seg_11.npy  
+    │   ├── testtom_vol_12.npy  
+    │   ├── testtom_seg_12.npy 
+    │   ├── testtom_vol_13.npy  
+    │   ├── testtom_seg_13.npy  
+    │   ├── testtom_vol_14.npy  
+    │   ├── testtom_seg_14.npy  
+    │   ├── testtom_vol_15.npy  
+    │   ├── testtom_seg_15.npy 
+    │   ├── testtom_vol_16.npy  
+    │   ├── testtom_seg_16.npy  
+    │   ├── testtom_vol_17.npy  
+    │   ├── testtom_seg_17.npy 
+    │   ├── testtom_vol_18.npy  
+    │   ├── testtom_seg_18.npy  
+    │   ├── testtom_vol_19.npy  
+    │   ├── testtom_seg_19.npy  
+    │   ├── testtom_vol_20.npy  
+    │   ├── testtom_seg_20.npy 
+    │   ├── testtom_vol_21.npy  
+    │   └── testtom_seg_21.npy 
     │
-    ├── VALI                    # contain validation files
-    │   ├── T1
-    │   │   ├── kspace
-    │   │   │   ├── vali_1.mat          
-    │   │   │   ├── vali_2.mat 
-    │   │   │   ├── ...         
-    │   │   │   └── vali_M.mat 
-    │   │   └── ...
-    │   │   
-    │   ├── T2
-    │   │   ├── kspace
-    │   │   │   ├── vali_1.mat          
-    │   │   │   ├── vali_2.mat 
-    │   │   │   ├── ...         
-    │   │   │   └── vali_M.mat 
-    │   │   └── ...
-    │   │   
-    │   ├── FLAIR
-    │   │   ├── kspace
-    │   │   │   ├── vali_1.mat          
-    │   │   │   ├── vali_2.mat 
-    │   │   │   ├── ...         
-    │   │   │   └── vali_M.mat 
-    │   │   └── ...
-    │   └── ...
-    │
-    ├── TEST                    # contain test files
-    │   ├── T1
-    │   │   ├── kspace
-    │   │   │   ├── test_1.mat          
-    │   │   │   ├── test_2.mat 
-    │   │   │   ├── ...         
-    │   │   │   └── test_K.mat 
-    │   │   └── ...
-    │   │   
-    │   ├── T2
-    │   │   ├── kspace
-    │   │   │   ├── test_1.mat          
-    │   │   │   ├── test_2.mat 
-    │   │   │   ├── ...         
-    │   │   │   └── test_K.mat 
-    │   │   └── ...
-    │   │   
-    │   ├── FLAIR
-    │   │   ├── kspace
-    │   │   │   ├── test_1.mat          
-    │   │   │   ├── test_2.mat 
-    │   │   │   ├── ...         
-    │   │   │   └── test_K.mat 
-    │   │   └── ...
-    │   └── ...
-    │            
-    └── ...
+    ├── subtomograms_snr10000
+    │   ├── cnt.npy
+    │   └── ... 
+    └── 
 
-Each .mat should contain a W x W complex value matrix with kspace data in it, where W x W is the kspace size. 
-Please note the variable name should be set as 'kspace_py'.
-Then, please add the data directory './Data/' after --data_root in the code or scripts.
+Please refer to the above data directory setup to prepare you data, and please read the comments for the file contents.
+The training process use cnt.py / data.npy / data_seg.npy. Our dataloader will split the first 1-14 classes as training class and 15-22 classes as testing class.
+The testing process use testtom_vol_nn.npy
 
 ### To Run Our Code
 - Train the model
