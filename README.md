@@ -36,13 +36,13 @@ Our code has been tested with Python 3.7, Pytorch 0.4.1, CUDA 10.0 on Ubuntu 18.
 ### Dataset Setup
     ../
     Data/
-    ├── subtomograms_snrINF              
+    ├── subtomograms_snrINF      # dataset with SNR = INF       
     │   ├── cnt.npy              # 22x1 array -- contains the number of subtomograms for each classes (22 classes in total)
     │   ├── data.npy             # 22x1000x32x32x32 array -- contains 22 classes' subtomograms with size of 32x32x32. 1000 subtomogram storage place give, and is indexed by cnt.npy
     │   ├── data_seg.npy         # 22x1000x32x32x32 array -- contains 22 classes' subtomogram segmentation with size of 32x32x32, corresponding with data.npy
     │   ├── testtom_vol_00.npy   # 1xcountsx32x32x32 array -- contains 1st class's subtomograms with size of 32x32x32, counts means number of subtomogram in this class.
     │   ├── testtom_seg_00.npy   # 1xcountsx32x32x32 array -- contains 1st class's subtomogram segmentation with size of 32x32x32, counts means number of subtomogram in this class.
-    │   ├── testtom_vol_01.npy  
+    │   ├── testtom_vol_01.npy   # please refer to above comments
     │   ├── testtom_seg_01.npy 
     │   ├── testtom_vol_02.npy  
     │   ├── testtom_seg_02.npy  
@@ -85,37 +85,36 @@ Our code has been tested with Python 3.7, Pytorch 0.4.1, CUDA 10.0 on Ubuntu 18.
     │   ├── testtom_vol_21.npy  
     │   └── testtom_seg_21.npy 
     │
-    ├── subtomograms_snr10000
+    ├── subtomograms_snr10000    # dataset with SNR = 10000  
     │   ├── cnt.npy
     │   └── ... 
     └── 
 
-Please refer to the above data directory setup to prepare you data, and please read the comments for the file contents.
-The training process use cnt.py / data.npy / data_seg.npy. Our dataloader will split the first 1-14 classes as training class and 15-22 classes as testing class.
-The testing process use testtom_vol_nn.npy
+Please refer to the above data directory setup to prepare you data, and please carefully ead the comments for the file contents.
+The one-shot training and testing process use cnt.py / data.npy / data_seg.npy files. Our dataloader will split the first 1-14 classes as training class and 15-22 classes as testing class.
+The segmentation testing process use testtom_vol_nn.npy files
 
 ### To Run Our Code
-- Train the model
+- Train and Test the one-shot model
 ```bash
-python train.py --experiment_name 'train_DuDoRN_R4_pT1' --data_root './Data/' --dataset 'Cartesian' --netG 'DRDN' --n_recurrent 4 --use_prior --protocol_ref 'T1' --protocol_tag 'T2'
+python main_oneshot.py --dataset 'snrINF' --data_root '../Data/subtomograms_snrINF/' --net 'dusescnn' --N 2 --K 1
 ```
 where \
-`--experiment_name` provides the experiment name for the current run, and save all the corresponding results under the experiment_name's folder. \
+`--dataset` is the dataset's name. \
 `--data_root`  provides the data folder directory (with structure illustrated above). \
-`--n_recurrent` defines number of recurrent blocks in the DuDoRNet. \
-`--protocol_tag` defines target modality to be reconstruct, e.g. T2 or FLAIR. \
-`--protocol_ref` defines modality to be used as prior, e.g. T1. \
-`--use_prior` defines whether to use prior as indicated by protocol_ref. \
+`--net` is the network block structrue. \
+`--N` is the number of way/class. \
+`--K` is the number of shot/sample per class. \
 Other hyperparameters can be adjusted in the code as well.
 
-- Test the model
+- Test the model's segmentation output
 ```bash
-python test.py --experiment_name 'test_DuDoRN_R4_pT1' --accelerations 5 --resume './outputs/train_DuDoRN_R4_pT1/checkpoints/model_259.pt' --data_root './Data/' --dataset 'Cartesian' --netG 'DRDN' --n_recurrent 4 --use_prior --protocol_ref 'T1' --protocol_tag 'T2'
+python main_segment.py --dataset 'snrINF' --data_root '../Data/subtomograms_snrINF/' --resume './outputs/2-way-1-shot_dusescnn_snrINF/model_25.pkl' --net 'dusescnn' --N 2 --K 1 
 ```
 where \
-`--accelerations` defines the acceleration factor, e.g. 5 for 5 fold accelerations. \
-`--resume` defines which checkpoint for testing and evaluation. \
-The test will output an eval.mat containing model's input, reconstruction prediction, and ground-truth for evaluation.
+`--resume` defines which checkpoint for segmentation test evaluation. \
+The segmentation visualizations will be saved under './outputs/2-way-1-shot_dusescnn_snrINF/segment/'. \
+The quantitative results per class will be saved in './outputs/2-way-1-shot_dusescnn_snrINF/segment/dice.txt'. \
 
 Sample training/test scripts are provided under './scripts/' and can be directly executed.
 
