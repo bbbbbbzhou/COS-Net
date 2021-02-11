@@ -90,9 +90,9 @@ Our code has been tested with Python 3.7, Pytorch 0.4.1, CUDA 10.0 on Ubuntu 18.
     │   └── ... 
     └── 
 
-Please refer to the above data directory setup to prepare you data, and please carefully ead the comments for the file contents.
-The one-shot training and testing process use cnt.py / data.npy / data_seg.npy files. Our dataloader will split the first 1-14 classes as training class and 15-22 classes as testing class.
-The segmentation testing process use testtom_vol_nn.npy files
+Please refer to the above data directory setup to prepare you data, and please carefully ead the comments for the file contents. \
+The one-shot training and testing process use cnt.py / data.npy / data_seg.npy files. Our dataloader will split the first 1-14 classes as training class and 15-22 classes as testing class. \
+The segmentation testing process use testtom_vol_nn.npy files.
 
 ### To Run Our Code
 - Train and Test the one-shot model
